@@ -1,51 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:your_app_buscacep/cep/cep_provider.dart';
+import 'package:your_app_buscacep/models/cep_model.dart';
+import 'package:provider/provider.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController _controller = TextEditingController();
+class _HomePageState extends State<HomePage> {
+  late final GlobalKey<FormState> _formKey;
+  late final CepProvider _cepProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _formKey = GlobalKey<FormState>();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _cepProvider = Provider.of<CepProvider>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('Digite o CEP desejado:',
-                style: TextStyle(fontSize: 30.0)),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                  controller: _controller,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    errorBorder: OutlineInputBorder(),
-                    labelText: 'CEP:',
-                  )),
-            ),
-          ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Search Cep'),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: <Widget>[
+              _buildFormCep(),
+              AnimatedBuilder(
+                animation: _cepProvider,
+                builder: (context, _) {
+                  if (_cepProvider.state.isInitial) {
+                    return const Text('');
+                  } else if (_cepProvider.state.isLoading) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  } else if (_cepProvider.state.value != null) {
+                    final value = _cepProvider.state.value;
+                    return _buildCardResultAddress(value);
+                  }
+                  return Container();
+                },
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Aqui você pode adicionar a ação desejada quando o botão for pressionado
-          print('CEP digitado: ${_controller.text}');
-        },
-        tooltip: 'Search',
-        child: const Icon(Icons.search),
+    );
+  }
+
+  Widget _buildCardResultAddress(CepModel? value) {
+    return Center(
+      child: SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 30),
+          child: Text(
+              "${value!.cep}\n${value.bairro}, ${value.logradouro} - ${value.uf}.\n${value.localidade} - ${value.ddd} ",
+              style: const TextStyle(fontWeight: FontWeight.bold)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFormCep() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            onSaved: (value) {
+              _cepProvider.getAddress(value!);
+            },
+            validator: (value) {
+              if (value!.length != 8) {
+                return "Cep Inválido";
+              }
+              return null;
+            },
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(label: Text("CEP")),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+              }
+            },
+            child: const Text('Consultar'),
+          )
+        ],
       ),
     );
   }

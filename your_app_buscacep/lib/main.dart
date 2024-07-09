@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:your_app_buscacep/cep/cep_provider.dart';
 import 'package:your_app_buscacep/screen/homepage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SearchCep());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SearchCep extends StatelessWidget {
+  const SearchCep({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Busca Cep',
-      theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 235, 66)),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => CepProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Search Cep',
+        home: const HomePage(),
+        theme: ThemeData(primarySwatch: Colors.yellow),
       ),
-      home: const MyHomePage(title: 'Busca CEP'),
     );
   }
 }
