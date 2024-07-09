@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     errorBorder: OutlineInputBorder(),
-                    labelText: 'CEP',
+                    labelText: 'CEP:',
                   )),
             ),
           ],
