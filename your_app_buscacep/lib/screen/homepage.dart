@@ -35,10 +35,12 @@ class _HomePageState extends State<HomePage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Search Cep'),
+          backgroundColor: Color.fromARGB(255, 102, 148, 235),
+          centerTitle: true,
+          title: const Text('Busca CEP'),
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(40),
           child: Column(
             children: <Widget>[
               _buildFormCep(),
@@ -50,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                   } else if (_cepProvider.state.isLoading) {
                     return const Center(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.only(top: 45),
                         child: CircularProgressIndicator(),
                       ),
                     );
@@ -72,7 +74,7 @@ class _HomePageState extends State<HomePage> {
     return Center(
       child: SizedBox(
         child: Padding(
-          padding: const EdgeInsets.only(top: 30),
+          padding: const EdgeInsets.only(top: 20),
           child: Text(
               "${value!.cep}\n${value.bairro}, ${value.logradouro} - ${value.uf}.\n${value.localidade} - ${value.ddd} ",
               style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -92,12 +94,12 @@ class _HomePageState extends State<HomePage> {
             },
             validator: (value) {
               if (value!.length != 8) {
-                return "Cep Inválido";
+                return "CEP Inválido";
               }
               return null;
             },
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(label: Text("CEP")),
+            decoration: const InputDecoration(label: Text("Digite o CEP:")),
           ),
           const SizedBox(
             height: 30,

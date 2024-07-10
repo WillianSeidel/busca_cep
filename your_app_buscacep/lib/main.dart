@@ -18,7 +18,7 @@ class SearchCep extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Search Cep',
         home: const HomePage(),
-        theme: ThemeData(primarySwatch: Colors.yellow),
+        theme: ThemeData(primarySwatch: Colors.blue),
       ),
     );
   }
