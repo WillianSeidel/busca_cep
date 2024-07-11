@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   http: ^0.13.5
   provider: ^6.0.3
+  mockito: ^5.0.16
+  build_runner: ^2.1.10
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
