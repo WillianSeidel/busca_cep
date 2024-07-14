@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   } else if (_cepProvider.state.value != null) {
                     final value = _cepProvider.state.value;
-                    return _buildCardResultAddress(value);
+                    return _buildResultBox(value!);
                   }
                   return Container();
                 },
@@ -70,15 +70,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCardResultAddress(CepModel? value) {
-    return Center(
-      child: SizedBox(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Text(
-              "${value!.cep}\n${value.bairro}, ${value.logradouro} - ${value.uf}.\n${value.localidade} - ${value.ddd} ",
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-        ),
+  Widget _buildResultBox(CepModel value) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.grey),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "${value.cep}",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          SizedBox(height: 10),
+          Text(
+            "${value.bairro}, ${value.logradouro} - ${value.uf}",
+            style: TextStyle(fontSize: 16),
+          ),
+          SizedBox(height: 5),
+          Text(
+            "${value.localidade} - ${value.ddd}",
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
       ),
     );
   }
@@ -111,7 +128,7 @@ class _HomePageState extends State<HomePage> {
               }
             },
             child: const Text('Consultar'),
-          )
+          ),
         ],
       ),
     );
