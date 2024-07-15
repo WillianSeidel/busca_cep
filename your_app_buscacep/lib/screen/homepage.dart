@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:your_app_buscacep/cep/cep_provider.dart';
 import 'package:your_app_buscacep/models/cep_model.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -58,7 +59,15 @@ class _HomePageState extends State<HomePage> {
                     );
                   } else if (_cepProvider.state.value != null) {
                     final value = _cepProvider.state.value;
-                    return _buildResultBox(value!);
+                    return Column(
+                      children: [
+                        _buildResultBox(value!),
+                        ElevatedButton(
+                          onPressed: () => _shareAddress(value),
+                          child: const Text('Compartilhar Endereço'),
+                        ),
+                      ],
+                    );
                   }
                   return Container();
                 },
@@ -132,5 +141,18 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void _shareAddress(CepModel value) {
+    final address = '''
+CEP: ${value.cep}
+Logradouro: ${value.logradouro}
+Complemento: ${value.complemento}
+Bairro: ${value.bairro}
+Localidade: ${value.localidade}
+UF: ${value.uf}
+DDD: ${value.ddd}
+''';
+    Share.share(address);
   }
 }
