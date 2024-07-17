@@ -3,6 +3,7 @@ import 'package:your_app_buscacep/cep/cep_provider.dart';
 import 'package:your_app_buscacep/models/cep_model.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,13 +20,34 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _formKey = GlobalKey<FormState>();
+    _loadSavedAddress();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     _cepProvider = Provider.of<CepProvider>(context, listen: false);
+  }
+
+  Future<void> _loadSavedAddress() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedCep = prefs.getString('cep');
+    if (savedCep != null) {
+      _cepProvider.getAddress(savedCep);
+    }
+  }
+
+  Future<void> _saveAddress(CepModel value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('cep', value.cep!);
+    await prefs.setString('bairro', value.bairro!);
+    await prefs.setString('logradouro', value.logradouro!);
+    await prefs.setString('uf', value.uf!);
+    await prefs.setString('localidade', value.localidade!);
+    await prefs.setString('ddd', value.ddd!);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Endereço salvo!')),
+    );
   }
 
   @override
@@ -58,13 +80,22 @@ class _HomePageState extends State<HomePage> {
                       ),
                     );
                   } else if (_cepProvider.state.value != null) {
-                    final value = _cepProvider.state.value;
+                    final value = _cepProvider.state.value!;
                     return Column(
                       children: [
-                        _buildResultBox(value!),
-                        ElevatedButton(
-                          onPressed: () => _shareAddress(value),
-                          child: const Text('Compartilhar Endereço'),
+                        _buildResultBox(value),
+                        Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => _saveAddress(value),
+                              child: const Text('Salvar Endereço'),
+                            ),
+                            SizedBox(width: 3),
+                            ElevatedButton(
+                              onPressed: () => _shareAddress(value),
+                              child: const Text('Compartilhar End'),
+                            )
+                          ],
                         ),
                       ],
                     );
