@@ -11,5 +11,7 @@ Evolução das telas:
 
 <img src="https://github.com/user-attachments/assets/a187a9bf-f291-4399-a43b-0bede1f9f7cc" width="25%">
 
+<img src="https://github.com/user-attachments/assets/c1e4b90d-dd23-420b-8b93-588142b41e5f" width="25%">
+
 </div>
 
