@@ -121,20 +121,34 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildResultRow('CEP', value.cep),
+          _buildResultRow('Logradouro', value.logradouro),
+          _buildResultRow('Complemento', value.complemento),
+          _buildResultRow('Bairro', value.bairro),
+          _buildResultRow('Localidade', value.localidade),
+          _buildResultRow('UF', value.uf),
+          _buildResultRow('DDD', value.ddd),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildResultRow(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
           Text(
-            "${value.cep}",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            '$label: ',
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
-          Text(
-            "${value.bairro}, ${value.logradouro} - ${value.uf}",
+          Flexible(
+              child: Text(
+            value ?? '',
             style: TextStyle(fontSize: 16),
-          ),
-          SizedBox(height: 5),
-          Text(
-            "${value.localidade} - ${value.ddd}",
-            style: TextStyle(fontSize: 16),
-          ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3, // Limite de linhas para o texto
+          ))
         ],
       ),
     );
